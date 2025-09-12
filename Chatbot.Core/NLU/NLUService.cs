@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using Chatbot.Core.Models;
 using Microsoft.ML;
 using Microsoft.ML.Data;
 

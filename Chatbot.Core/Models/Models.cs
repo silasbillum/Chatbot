@@ -1,6 +1,6 @@
 using Microsoft.ML.Data;
 
-namespace Chatbot.Core
+namespace Chatbot.Core.Models
 {
     public class ChatInput
     {

@@ -1,10 +1,11 @@
 using Chatbot.Core.DM;
+using Chatbot.Core.Entities;
 using Chatbot.Core.NLG;
 using Chatbot.Core.NLU;
 using System;
 using System.Collections.Generic;
 
-namespace Chatbot.Core
+namespace Chatbot.Core.Chatbot
 {
     public class ChatbotService : IDisposable
     {

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Chatbot.Core
+namespace Chatbot.Core.NLG
 {
     public class NLGService
     {

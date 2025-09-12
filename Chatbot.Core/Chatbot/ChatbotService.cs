@@ -1,3 +1,6 @@
+using Chatbot.Core.DM;
+using Chatbot.Core.NLG;
+using Chatbot.Core.NLU;
 using System;
 using System.Collections.Generic;
 
@@ -39,6 +42,8 @@ namespace Chatbot.Core
             var response = _dialog.Handle(sessionId, intent, entities, _nlg);
             return response;
         }
+
+        
 
         public void Dispose()
         {

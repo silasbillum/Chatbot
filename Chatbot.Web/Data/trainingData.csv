@@ -1,0 +1,146 @@
+Text,Intent
+hello,greeting
+hi,greeting
+hey there,greeting
+good morning,greeting
+good afternoon,greeting
+good evening,greeting
+yo,greeting
+hiya,greeting
+howdy,greeting
+hey,greeting
+sup,greeting
+what's up,greeting
+greetings,greeting
+hello there,greeting
+hi friend,greeting
+hey buddy,greeting
+hi bot,greeting
+morning,greeting
+evening,greeting
+hey supermarket,greeting
+
+what do you sell,ask_products
+do you have bread,ask_products
+what items are in stock,ask_products
+what products do you carry,ask_products
+what do you offer,ask_products
+can i see the products,ask_products
+tell me what you sell,ask_products
+do you have groceries,ask_products
+do you sell fruits,ask_products
+do you sell vegetables,ask_products
+do you sell drinks,ask_products
+do you have milk,ask_products
+do you sell meat,ask_products
+do you stock snacks,ask_products
+what food do you sell,ask_products
+do you sell eggs,ask_products
+do you sell cheese,ask_products
+what things can I buy here,ask_products
+show me the products,ask_products
+
+how much is the bread,ask_price
+what's the price of milk,ask_price
+how much does cheese cost,ask_price
+what is the cost of apples,ask_price
+price of bananas please,ask_price
+can you tell me the price of coffee,ask_price
+what does bread cost,ask_price
+how much for a bottle of water,ask_price
+tell me the price of eggs,ask_price
+how much for chocolate,ask_price
+what’s the price of sugar,ask_price
+how much is rice,ask_price
+how much are oranges,ask_price
+price for flour please,ask_price
+how much does juice cost,ask_price
+can you give me the price of bread,ask_price
+what is the cost of biscuits,ask_price
+how much for butter,ask_price
+what’s the cost of tea,ask_price
+price of soda,ask_price
+
+i want to add bread to my cart,add_to_cart
+add 2 apples to cart,add_to_cart
+please add milk to my basket,add_to_cart
+put cheese in my cart,add_to_cart
+add a bottle of water,add_to_cart
+add 3 bananas,add_to_cart
+add eggs to my shopping,add_to_cart
+can you add bread for me,add_to_cart
+i need to add apples,add_to_cart
+add 5 oranges please,add_to_cart
+please put milk in my basket,add_to_cart
+i want to buy bread,add_to_cart
+buy 2 bottles of juice,add_to_cart
+add some coffee,add_to_cart
+put rice in the cart,add_to_cart
+add chocolate,add_to_cart
+please add sugar,add_to_cart
+add a pack of biscuits,add_to_cart
+throw in some tea,add_to_cart
+add butter to my cart,add_to_cart
+
+i want to checkout,checkout
+please checkout my cart,checkout
+i’d like to pay now,checkout
+let’s finish my shopping,checkout
+i want to pay,checkout
+proceed to checkout,checkout
+i’m ready to checkout,checkout
+time to pay,checkout
+i want to complete my purchase,checkout
+go to checkout,checkout
+check me out,checkout
+take me to checkout,checkout
+i want the bill,checkout
+bill please,checkout
+finish my shopping,checkout
+i’m done,checkout
+done shopping,checkout
+please charge me,checkout
+ring me up,checkout
+let me checkout,checkout
+
+yes,confirm
+confirm order,confirm
+yes please,confirm
+sure,confirm
+okay,confirm
+ok confirm,confirm
+that’s fine,confirm
+go ahead,confirm
+confirm my purchase,confirm
+i agree,confirm
+yes do it,confirm
+yes go ahead,confirm
+yes checkout,confirm
+alright,confirm
+fine,confirm
+yes confirm it,confirm
+please confirm,confirm
+yep,confirm
+yeah,confirm
+sounds good,confirm
+
+bye,goodbye
+see you,goodbye
+goodbye,goodbye
+later,goodbye
+see you soon,goodbye
+see ya,goodbye
+catch you later,goodbye
+bye bye,goodbye
+i’m leaving,goodbye
+talk to you later,goodbye
+ok bye,goodbye
+see you later,goodbye
+good night,goodbye
+farewell,goodbye
+i’m off,goodbye
+until next time,goodbye
+later on,goodbye
+have a good day,goodbye
+good day,goodbye
+take care,goodbye

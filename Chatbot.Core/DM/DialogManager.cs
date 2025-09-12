@@ -1,7 +1,8 @@
+using Chatbot.Core.NLG;
 using System;
 using System.Collections.Generic;
 
-namespace Chatbot.Core
+namespace Chatbot.Core.DM
 {
     public class DialogState
     {

@@ -6,7 +6,19 @@ namespace Chatbot.Core
 {
     public static class EntityExtractor
     {
-        private static readonly string[] KnownProducts = new[] { "bread", "milk", "apple", "banana", "eggs", "cheese", "coffee" };
+
+        public static class ProductCatalog
+        {
+            public static HashSet<string> Products { get; private set; }
+
+            static ProductCatalog()
+            {
+                var path = Path.Combine(AppContext.BaseDirectory, "Data", "products.csv");
+                Products = File.ReadAllLines(path).Skip(1).Where(l => !string.IsNullOrWhiteSpace(l)).Select(l => l.Trim().ToLower()).ToHashSet();
+            }
+        }
+
+       
 
         public static Dictionary<string, string> Extract(string text)
         {
@@ -15,7 +27,7 @@ namespace Chatbot.Core
             var m = Regex.Match(text, "\\b(\\d+)\\b");
             if (m.Success) result["number"] = m.Groups[1].Value;
 
-            foreach (var p in KnownProducts)
+            foreach (var p in ProductCatalog.Products)
             {
                 if (Regex.IsMatch(text, $"\\b{Regex.Escape(p)}\\b", RegexOptions.IgnoreCase))
                 {

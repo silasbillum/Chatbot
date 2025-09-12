@@ -7,7 +7,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
 // Chatbot service - singleton for demo. Provide path relative to content root.
-var csvPath = Path.Combine(builder.Environment.ContentRootPath, "trainingData.csv");
+var csvPath = Path.Combine(builder.Environment.ContentRootPath, "Data", "trainingData.csv");
 builder.Services.AddSingleton(new ChatbotService(csvPath));
 
 var app = builder.Build();

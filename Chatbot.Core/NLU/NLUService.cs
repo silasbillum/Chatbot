@@ -3,7 +3,7 @@ using System.IO;
 using Microsoft.ML;
 using Microsoft.ML.Data;
 
-namespace Chatbot.Core
+namespace Chatbot.Core.NLU
 {
     public class NLUService : IDisposable
     {

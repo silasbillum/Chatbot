@@ -1,0 +1,4 @@
+.page { display:flex; min-height:100vh; }
+.sidebar { width:200px; padding:10px; background:#f7f7f7; }
+main { flex:1; padding:20px; }
+.content { max-width:900px; margin:0 auto; }

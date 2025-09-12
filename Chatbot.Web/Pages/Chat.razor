@@ -1,0 +1,40 @@
+@page "/chat"
+@inject Chatbot.Core.ChatbotService Chatbot
+@using Microsoft.AspNetCore.Components.Web
+
+<h3>Chat with the Shop</h3>
+
+<div style="border:1px solid #ccc; padding:10px; height:350px; overflow-y:auto; background:#fafafa; margin-bottom:10px;" @ref="chatBox">
+    @foreach (var m in messages)
+    {
+        <div><strong>@m.Sender:</strong> @m.Text</div>
+    }
+</div>
+
+<input @bind="currentInput" @bind:event="oninput" placeholder="Type a message..." style="width:70%" @onkeydown="HandleKeyDown" />
+<button class="btn btn-primary" @onclick="Send">Send</button>
+
+@code {
+    private List<(string Sender,string Text)> messages = new();
+    private string currentInput = string.Empty;
+    private ElementReference chatBox;
+    private string sessionId = Guid.NewGuid().ToString();
+
+    private void Send()
+    {
+        if (string.IsNullOrWhiteSpace(currentInput)) return;
+        messages.Add(("You", currentInput));
+        var response = Chatbot.HandleMessage(sessionId, currentInput);
+        messages.Add(("Bot", response));
+        currentInput = string.Empty;
+        _ = Task.Run(async () => {
+            await Task.Delay(50);
+            await InvokeAsync(() => chatBox.FocusAsync());
+        });
+    }
+
+    private void HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter") Send();
+    }
+}

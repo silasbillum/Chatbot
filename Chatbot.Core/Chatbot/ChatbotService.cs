@@ -15,7 +15,10 @@ namespace Chatbot.Core.Chatbot
 
         public ChatbotService(string trainingCsvPath)
         {
-            _nlu = new NLUService(trainingCsvPath);
+            var mlNetEngine = new NLUService(trainingCsvPath);
+            var httpClient = new System.Net.Http.HttpClient();
+            var aiEngine = new AiNluEngine(httpClient);
+            _nlu = new HybridNluEngine(mlNetEngine, aiEngine);
             _nlg = new NLGService();
             _dialog = new DialogManager();
         }

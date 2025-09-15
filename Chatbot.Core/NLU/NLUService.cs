@@ -6,7 +6,7 @@ using Microsoft.ML.Data;
 
 namespace Chatbot.Core.NLU
 {
-    public class NLUService : IDisposable
+    public class NLUService : IDisposable, INluEngine
     {
         private readonly MLContext _mlContext;
         private PredictionEngine<ChatInput, ChatPrediction> _predictor;
@@ -32,11 +32,13 @@ namespace Chatbot.Core.NLU
             _predictor = _mlContext.Model.CreatePredictionEngine<ChatInput, ChatPrediction>(_model);
         }
 
-        public (string intent, float[] scores) Predict(string text)
+        public NluResult Predict(string text)
         {
             if (_predictor == null) throw new InvalidOperationException("Model not trained.");
             var pred = _predictor.Predict(new ChatInput { Text = text });
-            return (pred.PredictedIntent, pred.Score);
+            // Entity extraction logic can be added here. For now, return empty dictionary.
+            var entities = new Dictionary<string, string>();
+            return new NluResult(pred.PredictedIntent, entities);
         }
 
         public void Dispose()

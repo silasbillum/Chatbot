@@ -24,7 +24,7 @@ namespace Chatbot.Core.DM
             return st;
         }
 
-        public string Handle(string sessionId, string intent, Dictionary<string,string> entities, NLGService nlg)
+        public string Handle(string sessionId, string intent, Dictionary<string, string> entities, INlgEngine nlg)
         {
             var state = GetState(sessionId);
 
@@ -35,28 +35,28 @@ namespace Chatbot.Core.DM
                     {
                         var qty = entities.ContainsKey("number") ? entities["number"] : "1";
                         state.Cart.Add($"{qty}x {p}");
-                        return nlg.Generate("add_to_cart", entities);
+                        return nlg.GenerateResponse("add_to_cart", entities);
                     }
-                    return nlg.Generate("add_to_cart", entities);
+                    return nlg.GenerateResponse("add_to_cart", entities);
 
                 case "checkout":
                     state.AwaitingConfirmation = true;
-                    return nlg.Generate("checkout", entities);
+                    return nlg.GenerateResponse("checkout", entities);
 
                 case "confirm":
                     if (state.AwaitingConfirmation)
                     {
                         state.Cart.Clear();
                         state.AwaitingConfirmation = false;
-                        return nlg.Generate("confirm", entities);
+                        return nlg.GenerateResponse("confirm", entities);
                     }
                     return "There's nothing to confirm.";
 
                 case "goodbye":
-                    return nlg.Generate("goodbye", entities);
+                    return nlg.GenerateResponse("goodbye", entities);
 
                 default:
-                    return nlg.Generate(intent, entities);
+                    return nlg.GenerateResponse(intent, entities);
             }
         }
     }

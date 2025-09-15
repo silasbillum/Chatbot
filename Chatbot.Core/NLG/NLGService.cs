@@ -1,13 +1,15 @@
 using System;
 using System.Collections.Generic;
+using Chatbot.Core.NLU;
+
 
 namespace Chatbot.Core.NLG
 {
-    public class NLGService
+    public class NLGService : INlgEngine
     {
-        public string Generate(string intent, Dictionary<string,string> entities)
+        public string GenerateResponse(string intent, Dictionary<string, string> entities)
         {
-            entities ??= new Dictionary<string,string>();
+            entities ??= new Dictionary<string, string>();
 
             return intent switch
             {

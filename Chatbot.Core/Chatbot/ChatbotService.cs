@@ -9,8 +9,8 @@ namespace Chatbot.Core.Chatbot
 {
     public class ChatbotService : IDisposable
     {
-        private readonly NLUService _nlu;
-        private readonly NLGService _nlg;
+        private readonly INluEngine _nlu;
+        private readonly INlgEngine _nlg;
         private readonly DialogManager _dialog;
 
         public ChatbotService(string trainingCsvPath)

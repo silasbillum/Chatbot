@@ -6,10 +6,16 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-
-// Chatbot service - singleton for demo. Provide path relative to content root.
 var csvPath = Path.Combine(builder.Environment.ContentRootPath, "Data", "trainingData.csv");
-builder.Services.AddSingleton(new ChatbotService(csvPath));
+
+// Registrer NLUService som singleton
+builder.Services.AddSingleton<Chatbot.Core.NLU.NLUService>(provider =>
+    new Chatbot.Core.NLU.NLUService(csvPath)
+);
+
+builder.Services.AddSingleton<Chatbot.Core.Chatbot.ChatbotService>(provider =>
+    new Chatbot.Core.Chatbot.ChatbotService(csvPath)
+);
 
 var app = builder.Build();
 

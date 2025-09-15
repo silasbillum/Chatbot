@@ -3,6 +3,9 @@ using System.IO;
 using Chatbot.Core.Models;
 using Microsoft.ML;
 using Microsoft.ML.Data;
+using System.Linq;
+using System.Collections.Generic;
+using Microsoft.VisualBasic;
 
 namespace Chatbot.Core.NLU
 {
@@ -32,13 +35,51 @@ namespace Chatbot.Core.NLU
             _predictor = _mlContext.Model.CreatePredictionEngine<ChatInput, ChatPrediction>(_model);
         }
 
+        public List<List<string>> UnsupervisedIntentExtraction(string csvPath, int numClusters = 4)
+        {
+            if (!File.Exists(csvPath)) throw new FileNotFoundException(csvPath);
+
+            var unclassifiedSentences = File.ReadAllLines(csvPath)
+                .Where(l => !string.IsNullOrWhiteSpace(l))
+                .Select(l => l.Split(',')[0].Trim()) // Only take the sentence, not the label
+                .ToList();
+
+            if (unclassifiedSentences.Count < 2)
+                throw new ArgumentException("No unclassified sentences available for unsupervised intent extraction.");
+
+            var dataView = _mlContext.Data.LoadFromEnumerable(unclassifiedSentences.Select(s => new ChatInput { Text = s }));
+            var pipeline = _mlContext.Transforms.Text.FeaturizeText("Features", nameof(ChatInput.Text))
+                .Append(_mlContext.Clustering.Trainers.KMeans("Features", numberOfClusters: numClusters));
+
+            var model = pipeline.Fit(dataView);
+            var transformedData = model.Transform(dataView);
+            var predictions = _mlContext.Data.CreateEnumerable<ClusterPrediction>(transformedData, reuseRowObject: false).ToList();
+
+            var clusters = new List<List<string>>();
+            for (int i = 0; i < numClusters; i++)
+                clusters.Add(new List<string>());
+
+            for (int i = 0; i < predictions.Count; i++)
+                clusters[(int)predictions[i].PredictedClusterId - 1].Add(unclassifiedSentences[i]);
+
+            return clusters;
+        }
+
+
+
+
         public NluResult Predict(string text)
         {
-            if (_predictor == null) throw new InvalidOperationException("Model not trained.");
-            var pred = _predictor.Predict(new ChatInput { Text = text });
-            // Entity extraction logic can be added here. For now, return empty dictionary.
-            var entities = new Dictionary<string, string>();
-            return new NluResult(pred.PredictedIntent, entities);
+            if (_predictor == null)
+                throw new InvalidOperationException("Model not trained.");
+
+            var prediction = _predictor.Predict(new ChatInput { Text = text });
+
+            // Sæt en threshold, fx 0.5
+            if (prediction.Score.Max() < 0.5)
+                return new NluResult("unknown", new Dictionary<string, string>());
+
+            return new NluResult(prediction.PredictedIntent, new Dictionary<string, string>());
         }
 
         public void Dispose()

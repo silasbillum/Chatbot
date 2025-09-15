@@ -18,4 +18,12 @@ namespace Chatbot.Core.Models
 
         public float[] Score { get; set; }
     }
+
+    public class ClusterPrediction
+    {
+        [ColumnName("PredictedLabel")]
+        public uint PredictedClusterId { get; set; }
+    }
+
+
 }

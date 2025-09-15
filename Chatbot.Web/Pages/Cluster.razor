@@ -1,0 +1,32 @@
+﻿@page "/cluster"
+@inject Chatbot.Core.NLU.NLUService NluService
+
+<h3>Cluster Test</h3>
+
+<button @onclick="RunClustering">Kør clustering</button>
+
+@if (clusters != null)
+{
+    <div>
+        @for (int i = 0; i < clusters.Count; i++)
+        {
+            <h4>Cluster @((i + 1))</h4>
+            <ul>
+                @foreach (var sentence in clusters[i])
+                {
+                    <li>@sentence</li>
+                }
+            </ul>
+        }
+    </div>
+}
+
+@code {
+    List<List<string>>? clusters;
+
+    private void RunClustering()
+    {
+        var csvPath = @"c:\Users\Silas\Desktop\Folders\C#\Chatbot\Chatbot.Web\Data\unclassifiedSentences.csv";
+        clusters = NluService.UnsupervisedIntentExtraction(csvPath, numClusters: 4);
+    }
+}

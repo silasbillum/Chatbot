@@ -22,7 +22,13 @@ namespace Chatbot.Core.Chatbot
 
         public string HandleMessage(string sessionId, string message)
         {
-            var (intent, scores) = _nlu.Predict(message);
+            var result = _nlu.Predict(message);
+            var intent = result.Intent;
+
+            if (intent == "unknown")
+            {
+                File.AppendAllText(@"c:\Users\Silas\Desktop\Folders\C#\Chatbot\Chatbot.Web\Data\unclassifiedSentences.csv", $"{message},unknown{Environment.NewLine}");
+            }
 
             if (message.IndexOf("add", StringComparison.OrdinalIgnoreCase) >= 0 ||
                 message.IndexOf("buy", StringComparison.OrdinalIgnoreCase) >= 0)
@@ -44,7 +50,17 @@ namespace Chatbot.Core.Chatbot
             return response;
         }
 
-        
+        public List<List<string>> ClusterUnclassifiedSentences(string csvPath, int numClusters = 3)
+        {
+
+            return ((NLUService)_nlu).UnsupervisedIntentExtraction(csvPath, numClusters);
+        }
+
+        public void SaveUnclassifiedSentence(string sentence, string csvPath)
+        {
+            if (!string.IsNullOrWhiteSpace(sentence))
+                File.AppendAllText(csvPath, sentence + Environment.NewLine);
+        }
 
         public void Dispose()
         {

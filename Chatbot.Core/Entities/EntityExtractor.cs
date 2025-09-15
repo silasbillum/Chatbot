@@ -18,7 +18,37 @@ namespace Chatbot.Core.Entities
             }
         }
 
-       
+
+        public static class TrainingDataCatalog
+        {
+            public static List<string> TrainingData { get; private set; }
+
+            static TrainingDataCatalog()
+            {
+                var path = Path.Combine(AppContext.BaseDirectory, "Data", "trainingData.csv");
+                TrainingData = File.ReadAllLines(path)
+                    .Skip(1)
+                    .Where(l => !string.IsNullOrWhiteSpace(l))
+                    .Select(l => l.Trim())
+                    .ToList();
+            }
+        }
+
+        public static class unclassifiedSentencesCatalog
+        {
+            public static List<string> unclassifiedSentences { get; private set; }
+
+            static unclassifiedSentencesCatalog()
+            {
+                var path = Path.Combine(AppContext.BaseDirectory, "Data", "unclassifiedSentences.csv");
+                unclassifiedSentences = File.ReadAllLines(path)
+                    .Skip(1)
+                    .Where(l => !string.IsNullOrWhiteSpace(l))
+                    .Select(l => l.Trim())
+                    .ToList();
+            }
+        }
+
 
         public static Dictionary<string, string> Extract(string text)
         {

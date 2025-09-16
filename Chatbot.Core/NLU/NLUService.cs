@@ -77,20 +77,25 @@ namespace Chatbot.Core.NLU
 
             // Sæt en threshold, fx 0.5
             if (prediction.Score.Max() < 0.5)
-                return new NluResult("unknown", new Dictionary<string, string>());
+                return new NluResult("unknown", new Dictionary<string, string>(), null);
 
             // Ekstra check: intent-ordet skal optræde tidligt i sætningen
             if (string.IsNullOrWhiteSpace(prediction.PredictedIntent))
-                return new NluResult("unknown", new Dictionary<string, string>());
+                return new NluResult("unknown", new Dictionary<string, string>(), null);
 
             var intentWord = prediction.PredictedIntent.ToLower();
             var textLower = text.ToLower();
             int idx = textLower.IndexOf(intentWord);
             // Hvis intent-ordet ikke findes, eller først efter 40% af sætningen, returner unknown
             if (idx == -1 || idx > textLower.Length * 0.4)
-                return new NluResult("unknown", new Dictionary<string, string>());
+                return new NluResult("unknown", new Dictionary<string, string>(), null);
 
-            return new NluResult(prediction.PredictedIntent, new Dictionary<string, string>());
+            // Only allow known intents, otherwise fallback to AI
+            var knownIntents = new HashSet<string> { "add_to_cart", "ask_price", "checkout", "confirm", "goodbye" };
+            if (!knownIntents.Contains(prediction.PredictedIntent))
+                return new NluResult("unknown", new Dictionary<string, string>(), null);
+
+            return new NluResult(prediction.PredictedIntent, new Dictionary<string, string>(), null);
         }
 
         public void Dispose()

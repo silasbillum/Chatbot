@@ -1,3 +1,4 @@
+
 using Chatbot.Core.DM;
 using Chatbot.Core.Entities;
 using Chatbot.Core.NLG;
@@ -23,9 +24,14 @@ namespace Chatbot.Core.Chatbot
             _dialog = new DialogManager();
         }
 
-        public string HandleMessage(string sessionId, string message)
+        public async Task<string> HandleMessage(string sessionId, string message)
         {
-            var result = _nlu.Predict(message);
+            NluResult result;
+            // Try async if available
+            if (_nlu is HybridNluEngine hybrid)
+                result = await hybrid.PredictAsync(message);
+            else
+                result = _nlu.Predict(message);
             var intent = result.Intent;
 
             if (intent == "unknown")
@@ -69,5 +75,6 @@ namespace Chatbot.Core.Chatbot
         {
             _nlu?.Dispose();
         }
+
     }
 }

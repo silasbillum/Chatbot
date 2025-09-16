@@ -1,13 +1,19 @@
+
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Chatbot.Core.Models;
 using Chatbot.Core.NLU;
+using System.Text.Json;
 
 namespace Chatbot.Core.NLU
 {
     public class HybridNluEngine : INluEngine, IDisposable
     {
+        public void Train(string csvPath)
+        {
+            _mlNetEngine?.Train(csvPath);
+        }
         private readonly NLUService _mlNetEngine;
         private readonly AiNluEngine _aiEngine;
 

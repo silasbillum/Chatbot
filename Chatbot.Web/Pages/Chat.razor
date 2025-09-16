@@ -21,21 +21,25 @@
     private ElementReference chatBox;
     private string sessionId = Guid.NewGuid().ToString();
 
-    private void Send()
+
+    private async Task Send()
     {
         if (string.IsNullOrWhiteSpace(currentInput)) return;
         messages.Add(("You", currentInput));
-        var response = Chatbot.HandleMessage(sessionId, currentInput);
+        messages.Add(("Bot", "Bot is thinking..."));
+        StateHasChanged();
+        var response = await Chatbot.HandleMessage(sessionId, currentInput);
+        // Remove the 'Bot is thinking...' message
+        var idx = messages.FindLastIndex(m => m.Sender == "Bot" && m.Text == "Bot is thinking...");
+        if (idx != -1) messages.RemoveAt(idx);
         messages.Add(("Bot", response));
         currentInput = string.Empty;
-        _ = Task.Run(async () => {
-            await Task.Delay(50);
-            await InvokeAsync(() => chatBox.FocusAsync());
-        });
+        await Task.Delay(50);
+        await chatBox.FocusAsync();
     }
 
-    private void HandleKeyDown(KeyboardEventArgs e)
+    private async Task HandleKeyDown(KeyboardEventArgs e)
     {
-        if (e.Key == "Enter") Send();
+        if (e.Key == "Enter") await Send();
     }
 }

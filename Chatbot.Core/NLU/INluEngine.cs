@@ -1,7 +1,7 @@
 
 namespace Chatbot.Core.NLU
 {
-    public record NluResult(string Intent, Dictionary<string, string> Entities);
+    // Moved to NluResult.cs for RawResponse support
 
     public interface INluEngine
     {

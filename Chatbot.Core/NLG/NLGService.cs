@@ -22,6 +22,7 @@ namespace Chatbot.Core.NLG
                 "checkout" => "Sure — proceeding to checkout. Your total is $10.00 (sample). Would you like to confirm?",
                 "confirm" => "Order confirmed. Thank you for shopping with us!",
                 "goodbye" => "Goodbye! Have a great day.",
+                "ai_answer" => entities.TryGetValue("answer", out var answer) ? answer : "(AI svar mangler)",
                 _ => "Sorry, I didn't understand. Could you rephrase?"
             };
         }

@@ -28,7 +28,7 @@
         messages.Add(("You", currentInput));
         messages.Add(("Bot", "Bot is thinking..."));
         StateHasChanged();
-        var response = await Chatbot.HandleMessage(sessionId, currentInput);
+        var response = await Chatbot.GetAiTextAsync(currentInput);
         // Remove the 'Bot is thinking...' message
         var idx = messages.FindLastIndex(m => m.Sender == "Bot" && m.Text == "Bot is thinking...");
         if (idx != -1) messages.RemoveAt(idx);

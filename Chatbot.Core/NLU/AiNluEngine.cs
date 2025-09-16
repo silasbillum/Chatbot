@@ -42,56 +42,43 @@ public class AiNluEngine
         using var reader = new System.IO.StreamReader(stream);
         string? line;
         var answerBuilder = new System.Text.StringBuilder();
+        var rawBuilder = new System.Text.StringBuilder();
         while ((line = await reader.ReadLineAsync()) != null)
         {
-            answerBuilder.AppendLine(line);
-            // Optionally: Here you could fire an event/callback to update the UI in real time
-        }
-        var answer = answerBuilder.ToString().Trim();
-
-        // Try to parse as JSON, else treat as plain text
-        string intent = "ExternalFallback";
-        var entities = new Dictionary<string, string>();
-        bool parsed = false;
-        try
-        {
-            using var doc = JsonDocument.Parse(answer);
-            if (doc.RootElement.TryGetProperty("intent", out var intentProp))
+            rawBuilder.AppendLine(line);
+            try
             {
-                intent = intentProp.GetString() ?? intent;
-                parsed = true;
-            }
-            if (doc.RootElement.TryGetProperty("entities", out var entitiesProp) && entitiesProp.ValueKind == JsonValueKind.Object)
-            {
-                foreach (var prop in entitiesProp.EnumerateObject())
+                using var doc = JsonDocument.Parse(line);
+                if (doc.RootElement.TryGetProperty("response", out var respProp))
                 {
-                    entities[prop.Name] = prop.Value.GetString() ?? string.Empty;
+                    var chunk = respProp.GetString();
+                    if (!string.IsNullOrEmpty(chunk))
+                        answerBuilder.Append(chunk);
                 }
             }
-        }
-        catch
-        {
-            // Not JSON, treat as plain text answer
-        }
-
-        if (!parsed)
-        {
-            // If not JSON, try to extract a clean answer (remove quotes, newlines, etc.)
-            intent = "ai_answer";
-            var clean = answer;
-            if ((clean.StartsWith("\"") && clean.EndsWith("\"")) || (clean.StartsWith("'") && clean.EndsWith("'")))
+            catch
             {
-                clean = clean.Substring(1, clean.Length - 2);
+                // Not JSON, ignore
             }
-            clean = clean.Replace("\n", " ").Replace("\r", " ").Trim();
-            entities["answer"] = clean;
         }
+        var answer = answerBuilder.ToString();
+        var raw = rawBuilder.ToString();
+        // Fjern alle linjeskift og trim mellemrum
+        answer = answer.Replace("\r", " ").Replace("\n", " ").Trim();
+        Console.WriteLine("[OLLAMA RAW RESPONSE]");
+        Console.WriteLine(raw);
+        Console.WriteLine($"[OLLAMA AI ANSWER LENGTH]: {answer.Length}");
+        Console.WriteLine($"[OLLAMA AI ANSWER]: '{answer}'");
 
-        // Set RawResponse for transparency
+        var entities = new Dictionary<string, string>();
+        if (!string.IsNullOrWhiteSpace(answer))
+            entities["answer"] = answer;
+        else
+            entities["answer"] = "";
         return new NluResult(
-            intent,
+            "ai_answer",
             entities,
-            answer
+            raw
         );
     }
 

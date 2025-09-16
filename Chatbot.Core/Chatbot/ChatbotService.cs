@@ -1,3 +1,4 @@
+      
 
 using Chatbot.Core.DM;
 using Chatbot.Core.Entities;
@@ -69,6 +70,32 @@ namespace Chatbot.Core.Chatbot
         {
             if (!string.IsNullOrWhiteSpace(sentence))
                 File.AppendAllText(csvPath, sentence + Environment.NewLine);
+        }
+
+        // Brug AiNluEngine.AnalyzeAsync til robust AI-svar
+        public async Task<string> GetAiTextAsync(string userInput)
+        {
+            if (_nlu is HybridNluEngine hybrid)
+            {
+                var aiEngineField = typeof(HybridNluEngine).GetField("_aiEngine", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                var aiEngine = aiEngineField?.GetValue(hybrid) as AiNluEngine;
+                if (aiEngine != null)
+                {
+                    var nluResult = await aiEngine.AnalyzeAsync(userInput);
+                    var answer = nluResult.Entities != null && nluResult.Entities.TryGetValue("answer", out var a) ? a : null;
+                    if (string.IsNullOrWhiteSpace(answer))
+                        return "(AI svar mangler)";
+                    // Del op i sætninger og saml pænt
+                    var sentences = answer
+                        .Replace("\r", " ")
+                        .Replace("\n", " ")
+                        .Split(new[] {'.', '!', '?'}, StringSplitOptions.RemoveEmptyEntries)
+                        .Select(s => s.Trim())
+                        .Where(s => !string.IsNullOrWhiteSpace(s));
+                    return string.Join(". ", sentences) + (answer.EndsWith(".") ? "." : "");
+                }
+            }
+            return "(AI svar mangler)";
         }
 
         public void Dispose()
